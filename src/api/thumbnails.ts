@@ -98,14 +98,12 @@ export async function handlerUploadThumbnail(cfg: ApiConfig, req: BunRequest) {
     // Step 8: Generate thumbnail URL
     const thumbnailURL = `http://localhost:${cfg.port}/upload/thumbnails/${videoId}`;
 
-    // Step 9: Respond with thumbnail URL
+    // Step 9: Update video metadata with thumbnail URL
     video.thumbnailURL = thumbnailURL;
     updateVideo(cfg.db, video);
 
-
-    //step 10: Return response
-
-    return respondWithJSON(200, { video });
+    // Step 10: Return updated video metadata
+    return respondWithJSON(200, video);
   }
 
   throw new BadRequestError("Method not allowed");
