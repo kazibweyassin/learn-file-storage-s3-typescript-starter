@@ -4,14 +4,25 @@ import { getVideo, updateVideo } from "../db/videos";
 import type { ApiConfig } from "../config";
 import type { BunRequest } from "bun";
 import { BadRequestError, NotFoundError, UserForbiddenError } from "./errors";
+import path from "path";
 
-type Thumbnail = {
-  data: ArrayBuffer;
-  mediaType: string;
-};
-
-const videoThumbnails: Map<string, Thumbnail> = new Map();
 const MAX_UPLOAD_SIZE = 10 << 20; // 10MB in bytes
+
+/**
+ * Map MIME types to file extensions
+ */
+function getFileExtension(mimeType: string): string {
+  const mimeToExt: Record<string, string> = {
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/jpg": "jpeg",
+    // "image/gif": "gif",
+    // "image/webp": "webp",
+    // "image/svg+xml": "svg",
+  };
+  
+  return mimeToExt[mimeType] || "jpg";
+}
 
 export async function handlerGetThumbnail(cfg: ApiConfig, req: BunRequest) {
   const { videoId } = req.params as { videoId?: string };
@@ -24,17 +35,12 @@ export async function handlerGetThumbnail(cfg: ApiConfig, req: BunRequest) {
     throw new NotFoundError("Couldn't find video");
   }
 
-  const thumbnail = videoThumbnails.get(videoId);
-  if (!thumbnail) {
+  if (!video.thumbnailURL) {
     throw new NotFoundError("Thumbnail not found");
   }
 
-  return new Response(thumbnail.data, {
-    headers: {
-      "Content-Type": thumbnail.mediaType,
-      "Cache-Control": "no-store",
-    },
-  });
+  // Redirect to the static file server
+  return Response.redirect(video.thumbnailURL, 302);
 }
 
 export async function handlerUploadThumbnail(cfg: ApiConfig, req: BunRequest) {
@@ -82,27 +88,33 @@ export async function handlerUploadThumbnail(cfg: ApiConfig, req: BunRequest) {
 
     // Step 5: Get and validate media type
     const mediaType = thumbnail.type;
-    if (!mediaType.startsWith("image/")) {
-      throw new BadRequestError("Thumbnail must be an image file");
+    if (!["image/png", "image/jpeg", "image/jpg"].includes(mediaType)) {
+      throw new BadRequestError("Thumbnail must be PNG or JPEG");
     }
 
     // Step 6: Read file data into ArrayBuffer
     const data = await thumbnail.arrayBuffer();
 
-    // Step 7: Save thumbnail to global map
-    videoThumbnails.set(videoId, {
-      data,
-      mediaType,
-    });
+    // Step 7: Determine file extension from MIME type
+    const fileExtension = getFileExtension(mediaType);
 
-    // Step 8: Generate thumbnail URL
-    const thumbnailURL = `http://localhost:${cfg.port}/upload/thumbnails/${videoId}`;
+    // Step 8: Create file path using videoId and extension
+    const filename = `${videoId}.${fileExtension}`;
+    const filePath = path.join(cfg.assetsRoot, filename);
 
-    // Step 9: Update video metadata with thumbnail URL
+    // Step 9: Write file to disk using Bun.write
+    await Bun.write(filePath, data);
+
+    console.log(`Thumbnail saved to: ${filePath}`);
+
+    // Step 10: Generate thumbnail URL (served by file server in index.ts)
+    const thumbnailURL = `http://localhost:${cfg.port}/assets/${filename}`;
+
+    // Step 11: Update video metadata with thumbnail URL
     video.thumbnailURL = thumbnailURL;
     updateVideo(cfg.db, video);
 
-    // Step 10: Return updated video metadata
+    // Step 12: Return updated video metadata
     return respondWithJSON(200, video);
   }
 
