@@ -1,5 +1,7 @@
 import { newDatabase } from "./db/db";
 import type { Database } from "bun:sqlite";
+import { s3, write, S3Client } from "bun";
+
 
 export type ApiConfig = {
   db: Database;
@@ -11,6 +13,8 @@ export type ApiConfig = {
   s3Region: string;
   s3CfDistribution: string;
   port: string;
+  s3Client: S3Client;
+  s3: typeof s3;
 };
 
 const pathToDB = envOrThrow("DB_PATH");

@@ -52,3 +52,7 @@ export function reset(db: Database) {
   db.exec("DELETE FROM users");
   db.exec("DELETE FROM videos");
 }
+
+
+
+

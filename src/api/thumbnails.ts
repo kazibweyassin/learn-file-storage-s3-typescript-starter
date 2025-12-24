@@ -5,8 +5,20 @@ import type { ApiConfig } from "../config";
 import type { BunRequest } from "bun";
 import { BadRequestError, NotFoundError, UserForbiddenError } from "./errors";
 import path from "path";
+import { console } from "inspector";
+import { uploadToS3 } from "./s3Client";
+
+import { readFileSignature, validateImageSignature } from "./fileValidation";
 
 const MAX_UPLOAD_SIZE = 10 << 20; // 10MB in bytes
+
+type RateLimitInfo = {
+  count: number;        // Requests made in current window
+  resetTime: number;    // When to reset count (timestamp)
+};
+
+// Storage: Map of userId -> RateLimitInfo
+const rateLimitStore = new Map<string, RateLimitInfo>();
 
 /**
  * Map MIME types to file extensions
@@ -16,6 +28,7 @@ function getFileExtension(mimeType: string): string {
     "image/png": "png",
     "image/jpeg": "jpg",
     "image/jpg": "jpeg",
+    "video/mp4": "mp4",
     // "image/gif": "gif",
     // "image/webp": "webp",
     // "image/svg+xml": "svg",
@@ -102,13 +115,20 @@ export async function handlerUploadThumbnail(cfg: ApiConfig, req: BunRequest) {
     const filename = `${videoId}.${fileExtension}`;
     const filePath = path.join(cfg.assetsRoot, filename);
 
-    // Step 9: Write file to disk using Bun.write
-    await Bun.write(filePath, data);
-
+    // Step 8.5: Validate file signature
     console.log(`Thumbnail saved to: ${filePath}`);
+    
+
+    const signature = await readFileSignature(thumbnail, 8);
+    if (!validateImageSignature(signature)) {
+      throw new BadRequestError("Invalid image file signature");
+    }
+      // Step 9: Write file to disk using Bun.write
+    
+      const s3Url = await uploadToS3(Buffer.from(data), filename, mediaType);
 
     // Step 10: Generate thumbnail URL (served by file server in index.ts)
-    const thumbnailURL = `http://localhost:${cfg.port}/assets/${filename}`;
+    const thumbnailURL = `${s3Url}`;
 
     // Step 11: Update video metadata with thumbnail URL
     video.thumbnailURL = thumbnailURL;
@@ -120,3 +140,8 @@ export async function handlerUploadThumbnail(cfg: ApiConfig, req: BunRequest) {
 
   throw new BadRequestError("Method not allowed");
 }
+
+
+
+
+

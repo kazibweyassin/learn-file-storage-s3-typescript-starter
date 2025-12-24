@@ -11,6 +11,25 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.957.0",
+    "@aws-sdk/lib-storage": "^3.957.0",
     "jsonwebtoken": "^9.0.2"
-  }
+  },
+  "version": "1.0.0",
+  "description": "This repo contains the starter code for the Tubely application - the #1 tool for engagement bait - for the \"Learn File Servers and CDNs with S3 and CloudFront\" [course](https://www.boot.dev/courses/learn-file-servers-s3-cloudfront-typescript) on [boot.dev](https://www.boot.dev)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazibweyassin/learn-file-storage-s3-typescript-starter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kazibweyassin/learn-file-storage-s3-typescript-starter/issues"
+  },
+  "homepage": "https://github.com/kazibweyassin/learn-file-storage-s3-typescript-starter#readme"
 }
