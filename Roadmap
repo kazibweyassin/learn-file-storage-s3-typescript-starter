@@ -1,0 +1,2895 @@
+markdown
+
+# 🇪🇺 EU Visa Sponsorship Roadmap
+## From Zero to Hired in 4 Months
+
+> **Mission**: Land a visa-sponsored full-stack engineering role in Europe by June 2026  
+> **Stack**: AWS + React + TypeScript + Node.js  
+> **Timeline**: February - May 2026 (16 weeks)  
+> **Target Salary**: €50k-€70k (Germany/Netherlands/Ireland)
+
+---
+
+## 📊 Why This Roadmap Works
+
+**Traditional approach**: Learn → Build → Apply (6+ months, low success rate)  
+**This approach**: Learn + Build + Apply simultaneously (4 months, proven method)
+
+**Key differences**:
+- ✅ Cloud-first from Day 1 (EU companies need AWS skills)
+- ✅ AI-assisted development (10x productivity = competitive advantage)
+- ✅ Job applications start Month 2 (parallel track)
+- ✅ AWS certification by Month 3 (visa paperwork easier)
+- ✅ Portfolio quality > quantity (2 exceptional projects > 5 mediocre)
+
+---
+
+## 🎯 Month 1: Cloud Foundations + AI Mastery
+**Goal**: Deploy first production app to AWS using AI tools
+
+### Week 1: Setup + First Deployment
+**40 hours total (10h Mon-Thu, 0h Fri-Sun for rest)**
+
+#### Monday-Tuesday (20h)
+```bash
+# Day 1: Development Environment
+□ Install tools
+  ├── VS Code + Cursor (AI coding assistant)
+  ├── Node.js 20+ (LTS)
+  ├── Docker Desktop
+  ├── AWS CLI
+  └── Git configured with SSH keys
+
+□ AWS Account Setup
+  ├── Create free tier account (credit card required)
+  ├── Set up IAM user (never use root)
+  ├── Configure AWS CLI credentials
+  ├── Enable billing alerts ($5 threshold)
+  └── Create S3 bucket (your-name-portfolio)
+
+□ Master Cursor Basics
+  ├── Install Cursor
+  ├── Learn Cmd+K (inline editing)
+  ├── Learn Cmd+L (chat)
+  └── Practice: "Create Express TypeScript server with health endpoint"
+
+📚 Resources:
+- AWS Free Tier: https://aws.amazon.com/free/
+- Cursor Docs: https://cursor.sh/docs
+- AWS CLI Setup: https://docs.aws.amazon.com/cli/latest/userguide/
+```
+
+#### Wednesday-Thursday (20h)
+```typescript
+// Day 3-4: Build Your First Cloud App
+// PROJECT: File Storage API (use AI to accelerate)
+
+□ Initialize Project
+  ├── Create GitHub repo: "cloud-file-storage-api"
+  ├── Initialize: npm init -y
+  ├── Setup TypeScript: npx tsc --init
+  └── Install dependencies
+
+# Use Cursor to generate this structure:
+src/
+├── config/
+│   ├── aws.config.ts        # S3 client setup
+│   └── env.config.ts         # Environment variables
+├── middleware/
+│   ├── auth.middleware.ts    # JWT validation
+│   ├── upload.middleware.ts  # File validation
+│   └── error.middleware.ts   # Global error handler
+├── routes/
+│   ├── upload.routes.ts      # Upload endpoints
+│   └── health.routes.ts      # Health check
+├── services/
+│   ├── s3.service.ts         # S3 operations
+│   └── auth.service.ts       # JWT generation
+├── types/
+│   └── index.ts              # TypeScript types
+└── index.ts                  # Server entry point
+
+□ Core Features (AI-assisted)
+  // Prompt Cursor with:
+  "Create Express TypeScript API with:
+   - File upload endpoint with multipart/form-data
+   - S3 upload using AWS SDK v3
+   - File validation (max 5MB, images only)
+   - JWT authentication
+   - Health check endpoint
+   - Proper error handling
+   - TypeScript strict mode"
+
+□ Security Implementation
+  ├── Magic number validation (check file headers)
+  ├── File size limits (5MB max)
+  ├── Allowed MIME types: image/jpeg, image/png
+  ├── Sanitize filenames
+  └── Rate limiting (express-rate-limit)
+
+□ S3 Integration
+  ├── Create bucket with private ACL
+  ├── Generate presigned URLs for uploads
+  ├── Set up lifecycle policies (auto-delete after 30 days)
+  └── Enable CORS for frontend access
+
+📚 Resources:
+- AWS SDK v3 S3: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-s3/
+- File Upload Security: https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
+```
+
+**🎯 Week 1 Deliverable**: 
+```
+✅ API running locally with S3 integration
+✅ Can upload images, get presigned URLs
+✅ Code on GitHub with comprehensive README
+✅ Comfortable using Cursor for 50% of coding
+```
+
+---
+
+### Week 2: Testing + Docker + First Deployment
+**40 hours total**
+
+#### Monday-Tuesday (20h)
+```typescript
+// Day 5-6: Testing Strategy
+
+□ Unit Tests (Jest + Supertest)
+// Use Cursor to generate tests:
+"Write comprehensive tests for:
+ - File upload validation
+ - S3 service methods
+ - JWT generation
+ - Error handling
+ Target: 80%+ coverage"
+
+// Example test structure:
+describe('File Upload Service', () => {
+  it('should reject files larger than 5MB', async () => {
+    const largeFile = Buffer.alloc(6 * 1024 * 1024);
+    await expect(uploadService.validateFile(largeFile))
+      .rejects.toThrow('File too large');
+  });
+
+  it('should reject non-image files', async () => {
+    const txtFile = Buffer.from('text content');
+    await expect(uploadService.validateFile(txtFile, 'text/plain'))
+      .rejects.toThrow('Invalid file type');
+  });
+
+  it('should upload valid image to S3', async () => {
+    const image = await fs.readFile('./test-fixtures/test.jpg');
+    const result = await uploadService.upload(image, 'image/jpeg');
+    
+    expect(result.url).toMatch(/s3\.amazonaws\.com/);
+    expect(result.key).toBeDefined();
+  });
+});
+
+□ Integration Tests
+  ├── Test full upload flow
+  ├── Test authentication flow
+  ├── Test error scenarios
+  └── Mock S3 for faster tests
+
+□ Test Coverage Report
+  npm run test:coverage
+  # Target: 80%+ coverage
+
+📚 Resources:
+- Jest Docs: https://jestjs.io/
+- Supertest: https://github.com/visionmedia/supertest
+```
+
+#### Wednesday-Thursday (20h)
+```dockerfile
+# Day 7-8: Dockerize + Deploy to AWS
+
+□ Create Dockerfile
+# Use Cursor: "Create production-ready Dockerfile for Node.js TypeScript app"
+
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
+
+□ Docker Compose for Local Development
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - AWS_REGION=eu-west-1
+    env_file:
+      - .env
+
+□ Deploy to AWS EC2
+  ├── Launch t2.micro instance (free tier)
+  ├── Install Docker on instance
+  ├── Set up security groups (port 3000, 22, 443)
+  ├── Deploy app with docker-compose
+  ├── Set up Nginx reverse proxy
+  ├── Configure SSL with Let's Encrypt (Certbot)
+  └── Point custom domain (buy on Namecheap $10/year)
+
+# Deployment script (save as deploy.sh)
+#!/bin/bash
+ssh -i your-key.pem ubuntu@your-ec2-ip << 'EOF'
+  cd /home/ubuntu/app
+  git pull origin main
+  docker-compose down
+  docker-compose up -d --build
+  docker system prune -f
+EOF
+
+□ Environment Variables on EC2
+  ├── Store in .env file (never commit)
+  ├── AWS credentials via IAM role (best practice)
+  └── Use AWS Systems Manager Parameter Store
+
+📚 Resources:
+- Docker Best Practices: https://docs.docker.com/develop/dev-best-practices/
+- EC2 Setup: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/
+- Let's Encrypt: https://letsencrypt.org/
+```
+
+**🎯 Week 2 Deliverable**: 
+```
+✅ 80%+ test coverage with CI passing
+✅ Dockerized application
+✅ Deployed to AWS EC2 with custom domain
+✅ HTTPS enabled with valid SSL certificate
+✅ Live URL you can share: https://api.yourname.dev
+```
+
+---
+
+### Week 3: CI/CD + Frontend + Authentication
+**40 hours total**
+
+#### Monday-Tuesday (20h)
+```yaml
+# Day 9-10: CI/CD Pipeline
+
+□ GitHub Actions Setup
+# .github/workflows/ci.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:coverage
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker build -t file-storage-api .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/app
+            git pull origin main
+            docker-compose up -d --build
+
+□ Code Quality Tools
+  ├── ESLint + Prettier
+  ├── Husky pre-commit hooks
+  ├── Conventional commits
+  └── Branch protection rules
+
+□ Monitoring Setup
+  ├── CloudWatch Logs
+  ├── CloudWatch Alarms (CPU, Memory, Disk)
+  ├── Simple uptime monitoring (UptimeRobot - free)
+  └── Error tracking (Sentry - free tier)
+
+📚 Resources:
+- GitHub Actions: https://docs.github.com/en/actions
+- Sentry: https://sentry.io/
+```
+
+#### Wednesday-Thursday (20h)
+```typescript
+// Day 11-12: React Frontend + Authentication
+
+□ Create React App with Vite
+npm create vite@latest file-storage-ui -- --template react-ts
+
+□ Frontend Structure (use Cursor)
+src/
+├── components/
+│   ├── FileUpload.tsx        # Drag-drop upload
+│   ├── FileList.tsx          # Display uploaded files
+│   ├── Login.tsx             # JWT authentication
+│   └── ProtectedRoute.tsx    # Auth guard
+├── services/
+│   ├── api.service.ts        # Axios instance
+│   ├── auth.service.ts       # JWT storage
+│   └── upload.service.ts     # File upload logic
+├── hooks/
+│   ├── useAuth.ts            # Auth context
+│   └── useUpload.ts          # Upload with progress
+├── types/
+│   └── index.ts
+└── App.tsx
+
+□ Key Features (AI-assisted)
+// Prompt: "Create React components with TypeScript for:
+//  - File drag-drop upload with progress bar
+//  - JWT authentication (login/logout)
+//  - Protected routes
+//  - Display uploaded files from S3
+//  - Responsive design with Tailwind CSS"
+
+// Example: FileUpload.tsx
+interface UploadProgress {
+  fileName: string;
+  progress: number;
+  status: 'uploading' | 'success' | 'error';
+}
+
+const FileUpload: React.FC = () => {
+  const [files, setFiles] = useState([]);
+  
+  const handleUpload = async (fileList: FileList) => {
+    for (const file of Array.from(fileList)) {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      try {
+        const response = await uploadService.upload(formData, {
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total!
+            );
+            updateProgress(file.name, progress);
+          }
+        });
+        
+        setFiles(prev => prev.map(f => 
+          f.fileName === file.name 
+            ? { ...f, status: 'success' } 
+            : f
+        ));
+      } catch (error) {
+        setFiles(prev => prev.map(f => 
+          f.fileName === file.name 
+            ? { ...f, status: 'error' } 
+            : f
+        ));
+      }
+    }
+  };
+
+  return (
+    
+      {/* Drag-drop UI */}
+    
+  );
+};
+
+□ Authentication Flow
+  ├── Login form with email/password
+  ├── Store JWT in localStorage (HttpOnly cookie better for production)
+  ├── Axios interceptor to add Authorization header
+  ├── Auto-refresh token before expiry
+  └── Logout clears token and redirects
+
+□ Deploy Frontend
+  ├── Build: npm run build
+  ├── Deploy to S3 + CloudFront (static hosting)
+  ├── Configure custom domain (frontend.yourname.dev)
+  └── HTTPS via CloudFront SSL
+
+📚 Resources:
+- Vite: https://vitejs.dev/
+- React + TypeScript: https://react-typescript-cheatsheet.netlify.app/
+- CloudFront + S3: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/
+```
+
+**🎯 Week 3 Deliverable**: 
+```
+✅ Full CI/CD pipeline (test → build → deploy)
+✅ React frontend deployed on S3 + CloudFront
+✅ End-to-end authentication working
+✅ Live demo: https://app.yourname.dev
+✅ Both frontend & backend on custom domains
+```
+
+---
+
+### Week 4: Polish + AWS Certification Prep Begins
+**40 hours total**
+
+#### Monday-Thursday (40h)
+```markdown
+□ Project 1 Final Polish
+  ├── Comprehensive README with:
+  │   ├── Architecture diagram (draw.io or Excalidraw)
+  │   ├── API documentation (Swagger/OpenAPI)
+  │   ├── Setup instructions
+  │   ├── Environment variables template
+  │   ├── Screenshots/GIFs of working app
+  │   └── Tech stack + design decisions
+  ├── Add example .env.example file
+  ├── Create CONTRIBUTING.md
+  ├── Add LICENSE (MIT)
+  └── Record 2-min demo video (Loom)
+
+□ System Design Documentation
+# Create docs/ARCHITECTURE.md
+## System Architecture
+
+### High-Level Overview
+[Diagram: Client → CloudFront → S3 (React) → ALB → EC2 (API) → S3 (Files)]
+
+### Components
+1. **Frontend (React + TypeScript)**
+   - Hosted on S3 + CloudFront
+   - CDN distribution for global performance
+   - HTTPS via CloudFront SSL
+
+2. **Backend (Node.js + TypeScript)**
+   - Express API on EC2 t2.micro
+   - Docker containerized
+   - Nginx reverse proxy
+   - Auto-scaling group (for future)
+
+3. **Storage (AWS S3)**
+   - Private bucket for file storage
+   - Presigned URLs for secure access
+   - Lifecycle policy: delete after 30 days
+
+4. **Database (Future: RDS PostgreSQL)**
+   - File metadata (name, size, upload date)
+   - User information
+   - Upload history
+
+### Security
+- JWT authentication (15min access, 7d refresh)
+- File validation (magic numbers, size, type)
+- Rate limiting (10 uploads/hour per user)
+- CORS configuration
+- HTTPS everywhere
+- IAM roles (least privilege)
+
+### Monitoring
+- CloudWatch: CPU, Memory, Disk, Network
+- Sentry: Error tracking
+- UptimeRobot: Uptime monitoring
+- Custom metrics: Upload success rate, avg file size
+
+### Scalability Considerations
+- Horizontal scaling with ALB + Auto Scaling
+- S3 Transfer Acceleration for large files
+- CloudFront caching for static assets
+- Database read replicas
+- Redis for session/rate limit storage
+
+### Cost Optimization
+- Use S3 Intelligent-Tiering
+- CloudFront free tier (1TB/month)
+- EC2 reserved instances (save 40%)
+- Auto-scaling based on demand
+- Current cost: ~$15/month
+
+□ Start AWS Certified Developer - Associate Prep
+  ├── Enroll in course (Stephane Maarek on Udemy - $15)
+  ├── Study 1 hour/day (5 hours this week)
+  ├── Focus on: IAM, S3, EC2, Lambda, API Gateway
+  └── Take first practice exam
+
+□ LinkedIn Profile Optimization
+  ├── Update headline: "Full-Stack Cloud Engineer | AWS | React | Node.js | TypeScript | Open to EU Relocation"
+  ├── Add banner image (Canva - professional)
+  ├── Summary:
+      "Full-stack engineer building scalable cloud applications with AWS, React, and Node.js.
+       
+       🚀 Currently: Deployed production file storage system on AWS serving [X] users
+       💻 Tech: TypeScript, React, Node.js, AWS (S3, EC2, CloudFront), Docker, CI/CD
+       🎯 Seeking: Full-stack or backend roles in Europe with visa sponsorship
+       
+       Recent project: [Link to live demo]
+       GitHub: [Your profile]
+       
+       Open to opportunities in Germany, Netherlands, Ireland, Sweden."
+  ├── Add experience section with metrics
+  ├── Add skills: AWS, TypeScript, React, Node.js, Docker, CI/CD
+  ├── Add "Open to work" badge (Recruiters only)
+  └── Connect with 50+ European tech recruiters
+
+□ Write Technical Blog Post
+  # Title: "Building a Production File Storage API with AWS S3, Node.js, and TypeScript"
+  
+  Publish on:
+  ├── Dev.to
+  ├── Medium
+  ├── Your personal blog (optional)
+  └── Share on LinkedIn
+  
+  Include:
+  ├── Problem statement
+  ├── Architecture decisions
+  ├── Code snippets
+  ├── Challenges faced
+  ├── Performance metrics
+  └── Link to GitHub + live demo
+
+📚 Resources:
+- AWS Cert Course: https://www.udemy.com/course/aws-certified-developer-associate/
+- Draw.io: https://app.diagrams.net/
+- OpenAPI Spec: https://swagger.io/specification/
+```
+
+**🎯 Month 1 Deliverable**: 
+```
+✅ Production-ready full-stack app on AWS
+   └── Frontend: https://app.yourname.dev
+   └── Backend: https://api.yourname.dev
+✅ Comprehensive documentation + system design
+✅ CI/CD pipeline with automated deployments
+✅ 80%+ test coverage
+✅ LinkedIn profile optimized for EU recruiters
+✅ 1 technical blog post published
+✅ AWS certification prep started (5-10 hours in)
+✅ GitHub profile with 1 stellar project
+```
+
+---
+
+## 🚀 Month 2: Advanced Features + Second Project + Job Applications Begin
+**Goal**: Build scalable real-time app + Start applying to jobs
+
+### Week 5: Real-Time Features + Caching
+**40 hours total**
+
+#### Monday-Tuesday (20h)
+```typescript
+// Day 13-14: Add Redis + WebSockets to Project 1
+
+□ Redis Setup
+  ├── Launch AWS ElastiCache (Redis) - t2.micro free tier
+  ├── Install ioredis: npm install ioredis @types/ioredis
+  └── Configure connection
+
+// services/redis.service.ts
+import Redis from 'ioredis';
+
+class RedisService {
+  private client: Redis;
+
+  constructor() {
+    this.client = new Redis({
+      host: process.env.REDIS_HOST,
+      port: 6379,
+      password: process.env.REDIS_PASSWORD,
+      retryStrategy: (times) => Math.min(times * 50, 2000)
+    });
+  }
+
+  async cacheFile(key: string, data: any, ttl = 3600): Promise {
+    await this.client.setex(key, ttl, JSON.stringify(data));
+  }
+
+  async getFile(key: string): Promise {
+    const data = await this.client.get(key);
+    return data ? JSON.parse(data) : null;
+  }
+
+  async incrementUploadCount(userId: string): Promise {
+    return await this.client.incr(`uploads:${userId}:${Date.now()}`);
+  }
+}
+
+export const redisService = new RedisService();
+
+□ Rate Limiting with Redis
+// middleware/rate-limit.middleware.ts
+import rateLimit from 'express-rate-limit';
+import RedisStore from 'rate-limit-redis';
+
+export const uploadRateLimit = rateLimit({
+  store: new RedisStore({
+    client: redisService.client,
+    prefix: 'rate-limit:'
+  }),
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // 10 uploads per hour
+  message: 'Too many uploads, please try again later'
+});
+
+□ WebSocket for Real-Time Updates
+  ├── Install: npm install socket.io @types/socket.io
+  ├── Set up Socket.IO server
+  └── Emit upload progress events
+
+// server.ts
+import { Server as SocketServer } from 'socket.io';
+
+const io = new SocketServer(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+  
+  socket.on('subscribe-upload', (uploadId) => {
+    socket.join(`upload:${uploadId}`);
+  });
+});
+
+// In upload handler
+io.to(`upload:${uploadId}`).emit('upload-progress', {
+  uploadId,
+  progress: 75,
+  stage: 'processing'
+});
+
+□ Frontend WebSocket Integration
+// hooks/useUploadProgress.ts
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+
+export const useUploadProgress = (uploadId: string) => {
+  const [progress, setProgress] = useState(0);
+  
+  useEffect(() => {
+    const socket = io(process.env.VITE_API_URL!);
+    
+    socket.emit('subscribe-upload', uploadId);
+    socket.on('upload-progress', (data) => {
+      setProgress(data.progress);
+    });
+    
+    return () => {
+      socket.disconnect();
+    };
+  }, [uploadId]);
+  
+  return progress;
+};
+
+📚 Resources:
+- ElastiCache Redis: https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/
+- Socket.IO: https://socket.io/docs/v4/
+```
+
+#### Wednesday-Thursday (20h)
+```typescript
+// Day 15-16: Image Processing Pipeline
+
+□ Install Sharp for Image Processing
+npm install sharp @types/sharp
+
+□ Create Image Processing Service
+// services/image.service.ts
+import sharp from 'sharp';
+
+interface ImageSize {
+  name: 'thumbnail' | 'medium' | 'large';
+  width: number;
+  height: number;
+}
+
+class ImageService {
+  private sizes: ImageSize[] = [
+    { name: 'thumbnail', width: 150, height: 150 },
+    { name: 'medium', width: 800, height: 800 },
+    { name: 'large', width: 1920, height: 1920 }
+  ];
+
+  async processImage(buffer: Buffer): Promise<Map> {
+    const results = new Map();
+    
+    for (const size of this.sizes) {
+      const processed = await sharp(buffer)
+        .resize(size.width, size.height, {
+          fit: 'inside',
+          withoutEnlargement: true
+        })
+        .webp({ quality: 80 })
+        .toBuffer();
+      
+      results.set(size.name, processed);
+    }
+    
+    return results;
+  }
+
+  async optimize(buffer: Buffer, format: 'jpeg' | 'png' | 'webp'): Promise {
+    let pipeline = sharp(buffer);
+    
+    switch (format) {
+      case 'jpeg':
+        pipeline = pipeline.jpeg({ quality: 85, mozjpeg: true });
+        break;
+      case 'png':
+        pipeline = pipeline.png({ compressionLevel: 9 });
+        break;
+      case 'webp':
+        pipeline = pipeline.webp({ quality: 85 });
+        break;
+    }
+    
+    return pipeline.toBuffer();
+  }
+}
+
+export const imageService = new ImageService();
+
+□ Background Job Processing with BullMQ
+npm install bullmq @types/bullmq
+
+// queues/image-processing.queue.ts
+import { Queue, Worker } from 'bullmq';
+
+interface ImageJob {
+  fileKey: string;
+  userId: string;
+}
+
+export const imageQueue = new Queue('image-processing', {
+  connection: redisService.client
+});
+
+export const imageWorker = new Worker(
+  'image-processing',
+  async (job) => {
+    const { fileKey, userId } = job.data;
+    
+    // Download from S3
+    const buffer = await s3Service.getObject(fileKey);
+    
+    // Process images
+    const variants = await imageService.processImage(buffer);
+    
+    // Upload variants to S3
+    for (const [size, processedBuffer] of variants) {
+      const variantKey = `${fileKey}-${size}`;
+      await s3Service.upload(variantKey, processedBuffer);
+    }
+    
+    // Update database
+    await db.file.update({
+      where: { key: fileKey },
+      data: { 
+        processed: true,
+        variants: Array.from(variants.keys())
+      }
+    });
+    
+    // Notify user via WebSocket
+    io.to(`user:${userId}`).emit('image-processed', {
+      fileKey,
+      variants: Array.from(variants.keys())
+    });
+  },
+  {
+    connection: redisService.client,
+    concurrency: 5
+  }
+);
+
+□ Update Upload Endpoint
+// routes/upload.routes.ts
+router.post('/upload', uploadRateLimit, async (req, res) => {
+  const file = req.file;
+  
+  // Upload original to S3
+  const fileKey = await s3Service.upload(file.buffer);
+  
+  // Queue image processing job
+  await imageQueue.add('process-image', {
+    fileKey,
+    userId: req.user.id
+  });
+  
+  res.status(202).json({
+    message: 'Upload successful, processing...',
+    fileKey,
+    status: 'processing'
+  });
+});
+
+📚 Resources:
+- Sharp: https://sharp.pixelplumbing.com/
+- BullMQ: https://docs.bullmq.io/
+```
+
+**🎯 Week 5 Deliverable**: 
+```
+✅ Redis caching implemented
+✅ Real-time WebSocket updates
+✅ Image processing pipeline with Sharp
+✅ Background job queue with BullMQ
+✅ Multi-size image variants (thumbnail, medium, large)
+✅ Optimized images (WebP format, 50%+ size reduction)
+```
+
+---
+
+### Week 6: PostgreSQL + TypeORM + Dashboard
+**40 hours total**
+
+#### Monday-Tuesday (20h)
+```typescript
+// Day 17-18: Database Integration
+
+□ Launch RDS PostgreSQL
+  ├── Instance: db.t3.micro (free tier eligible)
+  ├── Database: file_storage_db
+  ├── Enable automatic backups
+  └── Configure security group (only from EC2)
+
+□ Install Dependencies
+npm install typeorm pg reflect-metadata @types/node
+
+□ Database Schema
+// entities/User.ts
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm';
+import { File } from './File';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column()
+  name: string;
+
+  @OneToMany(() => File, file => file.user)
+  files: File[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+// entities/File.ts
+@Entity()
+export class File {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  originalName: string;
+
+  @Column()
+  s3Key: string;
+
+  @Column()
+  mimeType: string;
+
+  @Column()
+  size: number;
+
+  @Column({ default: false })
+  processed: boolean;
+
+  @Column('simple-array', { nullable: true })
+  variants: string[];
+
+  @ManyToOne(() => User, user => user.files)
+  user: User;
+
+  @CreateDateColumn()
+  uploadedAt: Date;
+}
+
+□ Repository Pattern
+// repositories/file.repository.ts
+import { AppDataSource } from '../config/database';
+import { File } from '../entities/File';
+
+export class FileRepository {
+  private repo = AppDataSource.getRepository(File);
+
+  async create(data: Partial): Promise {
+    const file = this.repo.create(data);
+    return await this.repo.save(file);
+  }
+
+  async findByUser(userId: string): Promise {
+    return await this.repo.find({
+      where: { user: { id: userId } },
+      order: { uploadedAt: 'DESC' }
+    });
+  }
+
+  async findById(id: string): Promise {
+    return await this.repo.findOne({ where: { id } });
+  }
+
+  async updateProcessingStatus(id: string, processed: boolean): Promise {
+    await this.repo.update(id, { processed });
+  }
+}
+
+□ Database Migrations
+npm run typeorm migration:create -- src/migrations/InitialSchema
+
+// src/migrations/1234567890-InitialSchema.ts
+export class InitialSchema1234567890 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise {
+    await queryRunner.query(`
+      CREATE TABLE "user" (
+        "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+        "email" varchar NOT NULL UNIQUE,
+        "password" varchar NOT NULL,
+        "name" varchar NOT NULL,
+        "createdAt" timestamp DEFAULT now()
+      );
+    `);
+    
+    await queryRunner.query(`
+      CREATE TABLE "file" (
+        "id" uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+        "originalName" varchar NOT NULL,
+        "s3Key" varchar NOT NULL,
+        "mimeType" varchar NOT NULL,
+        "size" integer NOT NULL,
+        "processed" boolean DEFAULT false,
+        "variants" text[],
+        "userId" uuid REFERENCES "user"("id"),
+        "uploadedAt" timestamp DEFAULT now()
+      );
+      
+      CREATE INDEX "idx_file_userId" ON "file"("userId");
+      CREATE INDEX "idx_file_uploadedAt" ON "file"("uploadedAt");
+    `);
+  }
+
+  public async down(queryRunner: QueryRunner): Promise {
+    await queryRunner.query(`DROP TABLE "file"`);
+    await queryRunner.query(`DROP TABLE "user"`);
+  }
+}
+
+□ Run Migrations
+npm run typeorm migration:run
+
+📚 Resources:
+- TypeORM: https://typeorm.io/
+- PostgreSQL on RDS: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html
+```
+
+#### Wednesday-Thursday (20h)
+```typescript
+// Day 19-20: Analytics Dashboard
+
+□ Analytics Endpoints
+// routes/analytics.routes.ts
+router.get('/analytics/overview', authenticate, async (req, res) => {
+  const userId = req.user.id;
+  
+  const stats = await Promise.all([
+    fileRepo.count({ where: { user: { id: userId } } }),
+    fileRepo.sum('size', { user: { id: userId } }),
+    fileRepo.findRecentUploads(userId, 7), // Last 7 days
+    fileRepo.getFileTypeDistribution(userId)
+  ]);
+  
+  res.json({
+    totalFiles: stats[0],
+    totalStorage: stats[1],
+    recentUploads: stats[2],
+    fileTypes: stats[3]
+  });
+});
+
+router.get('/analytics/storage-trends', authenticate, async (req, res) => {
+  const userId = req.user.id;
+  const days = parseInt(req.query.days as string) || 30;
+  
+  const trends = await fileRepo.query(`
+    SELECT 
+      DATE(uploaded_at) as date,
+      COUNT(*) as uploads,
+      SUM(size) as storage
+    FROM file
+    WHERE user_id = $1
+      AND uploaded_at >= NOW() - INTERVAL '${days} days'
+    GROUP BY DATE(uploaded_at)
+    ORDER BY date ASC
+  `, [userId]);
+  
+  res.json(trends);
+});
+
+□ Dashboard Frontend (React + Recharts)
+npm install recharts
+
+// components/Dashboard.tsx
+import { LineChart, Line, BarChart, Bar, PieChart, Pie } from 'recharts';
+
+const Dashboard: React.FC = () => {
+  const [stats, setStats] = useState(null);
+  
+  useEffect(() => {
+    fetch('/api/analytics/overview')
+      .then(res => res.json())
+      .then(setStats);
+  }, []);
+  
+  return (
+    
+      
+        }
+        />
+        }
+        />
+      
+      
+      
+        
+          
+          
+          
+        
+        
+        
+          
+        
+      
+    
+  );
+};
+
+□ Add File Management Features
+  ├── Delete file (soft delete)
+  ├── Bulk delete
+  ├── Search files by name
+  ├── Filter by type/date
+  └── Download file
+
+📚 Resources:
+- Recharts: https://recharts.org/
+```
+
+**🎯 Week 6 Deliverable**: 
+```
+✅ PostgreSQL database with TypeORM
+✅ Database migrations set up
+✅ Analytics dashboard with charts
+✅ File management (CRUD operations)
+✅ Repository pattern implemented
+✅ Indexed queries for performance
+```
+
+---
+
+### Week 7: Second Project - Task Management API
+**40 hours total**
+
+```markdown
+PROJECT 2: Real-Time Task Management API
+Goal: Build a production-grade task management system with real-time collaboration
+
+Tech Stack:
+- Backend: Node.js + TypeScript + Fastify (faster than Express)
+- Database: PostgreSQL + Prisma ORM
+- Real-time: Socket.IO
+- Cache: Redis
+- Queue: BullMQ
+- Auth: JWT + Refresh Tokens
+- Deploy: AWS ECS (Docker containers)
+
+Features:
+1. User authentication (JWT + refresh tokens)
+2. Teams and workspaces
+3. Tasks with assignees, due dates, priorities
+4. Real-time updates when tasks change
+5. File attachments (S3)
+6. Comments on tasks
+7. Activity log
+8. Email notifications (AWS SES)
+9. Analytics dashboard
+
+□ Monday-Tuesday: Setup + Core Features
+  ├── Initialize Fastify project
+  ├── Set up Prisma with PostgreSQL
+  ├── Implement authentication (JWT + refresh tokens)
+  ├── Create database schema (User, Team, Task, Comment)
+  ├── Build CRUD endpoints for tasks
+  └── Write unit tests
+
+□ Wednesday-Thursday: Real-Time + Advanced Features
+  ├── Add Socket.IO for real-time updates
+  ├── Implement team collaboration
+  ├── Add task assignments and notifications
+  ├── Build activity log
+  ├── Create email notification service (AWS SES)
+  └── Deploy to AWS ECS
+```
+
+#### Detailed Implementation Guide:
+
+```typescript
+// Day 21-22: Core Task API
+
+□ Prisma Schema
+// prisma/schema.prisma
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  teams     TeamMember[]
+  tasks     Task[]   @relation("AssignedTasks")
+  createdAt DateTime @default(now())
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String
+  members   TeamMember[]
+  tasks     Task[]
+  createdAt DateTime @default(now())
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  role      Role     @default(MEMBER)
+  joinedAt  DateTime @default(now())
+  
+  @@unique([userId, teamId])
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  status      Status   @default(TODO)
+  priority    Priority @default(MEDIUM)
+  dueDate     DateTime?
+  assignee    User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assigneeId  String?
+  team        Team     @relation(fields: [teamId], references: [id])
+  teamId      String
+  comments    Comment[]
+  activities  Activity[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([teamId])
+  @@index([assigneeId])
+  @@index([status])
+}
+
+enum Status {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    String
+  createdAt DateTime @default(now())
+  
+  @@index([taskId])
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  action    String   // "created", "updated", "commented", etc.
+  field     String?  // Which field changed
+  oldValue  String?
+  newValue  String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  task      Task     @relation(fields: [taskId], references: [id])
+  taskId    String
+  createdAt DateTime @default(now())
+  
+  @@index([taskId])
+}
+
+□ Task Service with Business Logic
+// services/task.service.ts
+import { PrismaClient, Task, Status, Priority } from '@prisma/client';
+
+class TaskService {
+  constructor(private prisma: PrismaClient) {}
+
+  async createTask(data: CreateTaskDTO, userId: string): Promise {
+    // Verify user is team member
+    const membership = await this.prisma.teamMember.findUnique({
+      where: {
+        userId_teamId: {
+          userId,
+          teamId: data.teamId
+        }
+      }
+    });
+    
+    if (!membership) {
+      throw new Error('Not a team member');
+    }
+    
+    const task = await this.prisma.task.create({
+      data: {
+        ...data,
+        activities: {
+          create: {
+            action: 'created',
+            userId
+          }
+        }
+      },
+      include: {
+        assignee: true,
+        team: true
+      }
+    });
+    
+    // Emit real-time event
+    io.to(`team:${data.teamId}`).emit('task:created', task);
+    
+    // Queue notification email
+    await emailQueue.add('task-assigned', {
+      taskId: task.id,
+      assigneeId: task.assigneeId
+    });
+    
+    return task;
+  }
+
+  async updateTask(
+    taskId: string, 
+    updates: UpdateTaskDTO, 
+    userId: string
+  ): Promise {
+    const task = await this.prisma.task.findUnique({
+      where: { id: taskId }
+    });
+    
+    if (!task) throw new Error('Task not found');
+    
+    // Check permissions
+    await this.verifyAccess(userId, task.teamId);
+    
+    // Track changes for activity log
+    const changes: Array = [];
+    
+    for (const [field, newValue] of Object.entries(updates)) {
+      if (task[field] !== newValue) {
+        changes.push({
+          field,
+          old: task[field],
+          new: newValue
+        });
+      }
+    }
+    
+    // Update task
+    const updated = await this.prisma.task.update({
+      where: { id: taskId },
+      data: {
+        ...updates,
+        activities: {
+          create: changes.map(change => ({
+            action: 'updated',
+            field: change.field,
+            oldValue: String(change.old),
+            newValue: String(change.new),
+            userId
+          }))
+        }
+      },
+      include: {
+        assignee: true,
+        activities: {
+          take: 10,
+          orderBy: { createdAt: 'desc' }
+        }
+      }
+    });
+    
+    // Emit real-time update
+    io.to(`team:${task.teamId}`).emit('task:updated', updated);
+    
+    return updated;
+  }
+
+  async getTasks(teamId: string, filters: TaskFilters): Promise {
+    const where: any = { teamId };
+    
+    if (filters.status) where.status = filters.status;
+    if (filters.priority) where.priority = filters.priority;
+    if (filters.assigneeId) where.assigneeId = filters.assigneeId;
+    if (filters.search) {
+      where.OR = [
+        { title: { contains: filters.search, mode: 'insensitive' } },
+        { description: { contains: filters.search, mode: 'insensitive' } }
+      ];
+    }
+    
+    return await this.prisma.task.findMany({
+      where,
+      include: {
+        assignee: true,
+        _count: {
+          select: { comments: true }
+        }
+      },
+      orderBy: filters.sortBy || { createdAt: 'desc' },
+      take: filters.limit || 50,
+      skip: filters.offset || 0
+    });
+  }
+}
+
+□ Fastify Routes
+// routes/tasks.routes.ts
+import { FastifyInstance } from 'fastify';
+
+export async function taskRoutes(fastify: FastifyInstance) {
+  // Create task
+  fastify.post('/tasks', {
+    preHandler: [fastify.authenticate],
+    schema: {
+      body: {
+        type: 'object',
+        required: ['title', 'teamId'],
+        properties: {
+          title: { type: 'string', minLength: 1, maxLength: 200 },
+          description: { type: 'string', maxLength: 5000 },
+          teamId: { type: 'string', format: 'uuid' },
+          assigneeId: { type: 'string', format: 'uuid' },
+          priority: { type: 'string', enum: ['LOW', 'MEDIUM', 'HIGH', 'URGENT'] },
+          dueDate: { type: 'string', format: 'date-time' }
+        }
+      }
+    }
+  }, async (request, reply) => {
+    const task = await taskService.createTask(
+      request.body,
+      request.user.id
+    );
+    return reply.code(201).send(task);
+  });
+
+  // Get tasks
+  fastify.get('/tasks', {
+    preHandler: [fastify.authenticate],
+    schema: {
+      querystring: {
+        type: 'object',
+        properties: {
+          teamId: { type: 'string', format: 'uuid' },
+          status: { type: 'string', enum: ['TODO', 'IN_PROGRESS', 'REVIEW', 'DONE'] },
+          priority: { type: 'string' },
+          assigneeId: { type: 'string', format: 'uuid' },
+          search: { type: 'string' }
+        },
+        required: ['teamId']
+      }
+    }
+  }, async (request, reply) => {
+    const tasks = await taskService.getTasks(
+      request.query.teamId,
+      request.query
+    );
+    return tasks;
+  });
+
+  // Update task
+  fastify.patch('/tasks/:id', {
+    preHandler: [fastify.authenticate]
+  }, async (request, reply) => {
+    const task = await taskService.updateTask(
+      request.params.id,
+      request.body,
+      request.user.id
+    );
+    return task;
+  });
+
+  // Delete task
+  fastify.delete('/tasks/:id', {
+    preHandler: [fastify.authenticate]
+  }, async (request, reply) => {
+    await taskService.deleteTask(request.params.id, request.user.id);
+    return reply.code(204).send();
+  });
+
+  // Add comment
+  fastify.post('/tasks/:id/comments', {
+    preHandler: [fastify.authenticate]
+  }, async (request, reply) => {
+    const comment = await taskService.addComment(
+      request.params.id,
+      request.body.content,
+      request.user.id
+    );
+    return reply.code(201).send(comment);
+  });
+}
+
+□ Real-Time Updates with Socket.IO
+// socket/task.socket.ts
+import { Server as SocketServer } from 'socket.io';
+
+export function setupTaskSockets(io: SocketServer) {
+  io.use(async (socket, next) => {
+    // Authenticate socket connection
+    const token = socket.handshake.auth.token;
+    try {
+      const user = await verifyToken(token);
+      socket.data.userId = user.id;
+      next();
+    } catch (error) {
+      next(new Error('Authentication failed'));
+    }
+  });
+
+  io.on('connection', (socket) => {
+    console.log('User connected:', socket.data.userId);
+
+    // Join team rooms
+    socket.on('join-team', async (teamId: string) => {
+      // Verify user is team member
+      const isMember = await verifyTeamMembership(
+        socket.data.userId,
+        teamId
+      );
+      
+      if (isMember) {
+        socket.join(`team:${teamId}`);
+        console.log(`User ${socket.data.userId} joined team ${teamId}`);
+      }
+    });
+
+    // Leave team rooms
+    socket.on('leave-team', (teamId: string) => {
+      socket.leave(`team:${teamId}`);
+    });
+
+    // Typing indicator
+    socket.on('typing', ({ taskId, teamId }) => {
+      socket.to(`team:${teamId}`).emit('user-typing', {
+        taskId,
+        userId: socket.data.userId
+      });
+    });
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.data.userId);
+    });
+  });
+}
+
+// Usage in main server file
+const io = new SocketServer(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+  }
+});
+
+setupTaskSockets(io);
+
+// Make io available globally for emitting events
+global.io = io;
+
+□ Email Notifications with AWS SES
+// services/email.service.ts
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+
+class EmailService {
+  private ses: SESClient;
+
+  constructor() {
+    this.ses = new SESClient({
+      region: 'eu-west-1',
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!
+      }
+    });
+  }
+
+  async sendTaskAssignedEmail(task: Task, assignee: User): Promise {
+    const params = {
+      Source: 'noreply@yourdomain.com',
+      Destination: {
+        ToAddresses: [assignee.email]
+      },
+      Message: {
+        Subject: {
+          Data: `You've been assigned to: ${task.title}`
+        },
+        Body: {
+          Html: {
+            Data: `
+              New Task Assignment
+              Hi ${assignee.name},
+              You've been assigned to the task: ${task.title}
+              ${task.description || ''}
+              Due date: ${task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not set'}
+              Priority: ${task.priority}
+              
+              View Task
+            `
+          }
+        }
+      }
+    };
+
+    await this.ses.send(new SendEmailCommand(params));
+  }
+
+  async sendTaskDueReminder(task: Task, assignee: User): Promise {
+    // Similar implementation
+  }
+}
+
+// queues/email.queue.ts
+import { Queue, Worker } from 'bullmq';
+
+const emailQueue = new Queue('emails', {
+  connection: redisService.client
+});
+
+const emailWorker = new Worker('emails', async (job) => {
+  const { type, data } = job.data;
+  
+  switch (type) {
+    case 'task-assigned':
+      const task = await prisma.task.findUnique({
+        where: { id: data.taskId },
+        include: { assignee: true }
+      });
+      if (task && task.assignee) {
+        await emailService.sendTaskAssignedEmail(task, task.assignee);
+      }
+      break;
+    
+    case 'task-due-reminder':
+      // Handle due date reminders
+      break;
+  }
+}, {
+  connection: redisService.client
+});
+
+□ Deploy to AWS ECS
+  ├── Create Dockerfile
+  ├── Push to ECR (Elastic Container Registry)
+  ├── Create ECS cluster
+  ├── Define task definition
+  ├── Create service with load balancer
+  └── Set up auto-scaling
+```
+
+**🎯 Week 7 Deliverable**: 
+```
+✅ Full-featured task management API
+✅ Real-time collaboration with Socket.IO
+✅ Email notifications with AWS SES
+✅ Activity logging for all changes
+✅ Deployed on AWS ECS
+✅ Comprehensive API documentation (Swagger)
+✅ Live demo: https://tasks.yourname.dev
+```
+
+---
+
+### Week 8: AWS Certification + Job Applications
+**40 hours total**
+
+```markdown
+□ AWS Certified Developer - Associate Exam
+  ├── Complete Stephane Maarek's course (40 hours total so far)
+  ├── Take 3 practice exams (score 80%+ before real exam)
+  ├── Review weak areas
+  ├── Schedule and take exam
+  └── Add certification to LinkedIn
+
+□ Portfolio Polish
+  ├── Create portfolio website (Next.js)
+  │   ├── Hero section with introduction
+  │   ├── Projects showcase (2 main projects)
+  │   ├── Skills matrix
+  │   ├── Blog section (link to Dev.to posts)
+  │   ├── Contact form
+  │   └── Resume download
+  ├── Deploy on Vercel (free)
+  └── Custom domain: https://yourname.dev
+
+□ GitHub Profile README
+# Create compelling profile README
+- Introduction with tech stack
+- Current focus: "Building scalable cloud applications"
+- Featured projects with live demos
+- Tech stack badges
+- GitHub stats
+- Recent blog posts (auto-updated)
+
+□ Start Job Applications (20 applications this week)
+  ├── Research companies (use list from earlier)
+  ├── Customize cover letter for each
+  ├── Apply through:
+  │   ├── LinkedIn (5 apps)
+  │   ├── Company websites (5 apps)
+  │   ├── Relocate.me (5 apps)
+  │   └── Honeypot.io (5 apps)
+  └── Track in spreadsheet:
+      - Company name
+      - Position
+      - Date applied
+      - Status
+      - Follow-up dates
+
+□ Networking
+  ├── Connect with 20 recruiters/developers in EU
+  ├── Engage with 10 posts on LinkedIn daily
+  ├── Comment on tech blogs
+  └── Join Discord communities (Backend, Node.js, AWS)
+
+📚 Resources:
+- Portfolio inspiration: https://github.com/emmabostian/developer-portfolios
+- Cover letter template: Created earlier in this conversation
+```
+
+**🎯 Month 2 Deliverable**: 
+```
+✅ Two production projects deployed:
+   1. File Storage System (advanced features)
+   2. Task Management API (real-time collaboration)
+✅ AWS Certified Developer - Associate certification
+✅ Portfolio website live
+✅ 20 job applications submitted
+✅ LinkedIn fully optimized
+✅ Active in 3+ tech communities
+✅ 2 technical blog posts published
+```
+
+---
+
+## 🎯 Month 3: System Design + Interview Prep + Mass Applications
+**Goal**: Master system design, ace interviews, get 10+ interviews scheduled
+
+### Week 9-10: System Design Mastery
+**80 hours total (intensive)**
+
+```markdown
+□ Study "System Design Interview" by Alex Xu
+  ├── Volume 1: Chapters 1-8 (core concepts)
+  ├── Volume 2: Chapters 1-4 (real-world systems)
+  └── Take notes, draw diagrams for each
+
+□ Core System Design Patterns
+  Day 1-2: Design URL Shortener
+  ├── Requirements gathering
+  ├── API design (POST /shorten, GET /:shortCode)
+  ├── Database schema (SQL vs NoSQL trade-offs)
+  ├── URL encoding (base62)
+  ├── Caching strategy (Redis)
+  ├── Rate limiting
+  ├── Analytics
+  └── Scaling (horizontal, load balancer)
+
+  Day 3-4: Design Instagram/Image Sharing
+  ├── Image upload pipeline
+  ├── CDN distribution
+  ├── Feed generation (timeline)
+  ├── Database sharding
+  ├── Caching layers
+  ├── Search functionality
+  └── Notifications
+
+  Day 5-6: Design Rate Limiter
+  ├── Fixed window vs sliding window
+  ├── Token bucket algorithm
+  ├── Redis-based implementation
+  ├── Distributed rate limiting
+  ├── Different tiers (free, premium)
+  └── Monitoring and alerts
+
+  Day 7-8: Design Chat System (WhatsApp/Slack)
+  ├── WebSocket connections
+  ├── Message persistence
+  ├── Online presence
+  ├── Group chats
+  ├── Read receipts
+  ├── Push notifications
+  └── Scaling to millions of users
+
+  Day 9-10: Design Netflix/Video Streaming
+  ├── Video upload and encoding
+  ├── Adaptive bitrate streaming (HLS/DASH)
+  ├── CDN strategy
+  ├── Recommendation system
+  ├── Analytics
+  └── Cost optimization
+
+□ Practice System Design Interviews
+  ├── Record yourself explaining designs
+  ├── Practice on Pramp (3-4 sessions)
+  ├── Join mock interviews on interviewing.io
+  └── Time yourself (45 minutes per design)
+
+□ Create System Design Portfolio
+  # Add to GitHub repo: "system-design-solutions"
+  For each design:
+  ├── Problem statement
+  ├── Requirements (functional + non-functional)
+  ├── Capacity estimation
+  ├── API design
+  ├── Database schema
+  ├── High-level architecture diagram
+  ├── Detailed component design
+  ├── Scaling considerations
+  ├── Trade-offs discussed
+  └── Cost estimation
+
+📚 Resources:
+- System Design Primer: https://github.com/donnemartin/system-design-primer
+- Hussein Nasser YouTube: https://www.youtube.com/@hnasr
+- ByteByteGo: https://www.youtube.com/@ByteByteGo
+- Pramp: https://www.pramp.com/
+```
+
+**Key System Design Template:**
+
+```markdown
+# System Design: [Problem Name]
+
+## 1. Requirements
+
+### Functional Requirements
+- What the system should do
+- Core features
+- User interactions
+
+### Non-Functional Requirements
+- Performance (latency, throughput)
+- Scalability (concurrent users, data volume)
+- Availability (uptime target)
+- Consistency vs Availability trade-offs
+
+## 2. Capacity Estimation
+
+### Traffic Estimates
+- Daily Active Users (DAU): X million
+- Requests per second (RPS): Y thousand
+- Peak traffic: 3x average
+
+### Storage Estimates
+- Average data per user: Z MB
+- Total storage: DAU × Z MB
+- Storage for 5 years: Calculate
+
+### Bandwidth Estimates
+- Average request size: A KB
+- Average response size: B KB
+- Bandwidth: RPS × (A + B)
+
+## 3. API Design
+
+POST /api/resource
+GET /api/resource/:id
+PUT /api/resource/:id
+DELETE /api/resource/:id
+
+[Include request/response schemas]
+
+## 4. Database Design
+
+### Schema
+- Tables/Collections
+- Relationships
+- Indexes
+
+### Technology Choice
+- SQL vs NoSQL
+- Reasoning for choice
+- Sharding strategy (if needed)
+
+## 5. High-Level Architecture
+
+[Diagram: Client → Load Balancer → App Servers → Cache → Database]
+
+### Components
+1. Load Balancer (Nginx, AWS ALB)
+2. Application Servers (Node.js, Auto-scaling)
+3. Cache Layer (Redis, Memcached)
+4. Database (PostgreSQL, MongoDB)
+5. Object Storage (S3)
+6. CDN (CloudFront)
+7. Message Queue (SQS, RabbitMQ)
+
+## 6. Detailed Component Design
+
+### Load Balancing
+- Round-robin, least connections, IP hash
+- Health checks
+- SSL termination
+
+### Caching Strategy
+- Cache-aside (lazy loading)
+- Write-through
+- TTL policies
+- Cache invalidation
+
+### Database
+- Replication (master-slave)
+- Sharding (horizontal partitioning)
+- Indexing strategy
+- Connection pooling
+
+## 7. Scalability
+
+### Horizontal Scaling
+- Stateless application servers
+- Database read replicas
+- Sharding
+
+### Vertical Scaling
+- When to use
+- Limitations
+
+### Microservices
+- Service decomposition
+- API Gateway
+- Service discovery
+
+## 8. Trade-offs
+
+### Consistency vs Availability (CAP Theorem)
+- Strong consistency: PostgreSQL, Redis
+- Eventual consistency: Cassandra, DynamoDB
+- Choice based on use case
+
+### Latency vs Throughput
+- In-memory cache vs disk storage
+- Batch processing vs real-time
+
+### Cost vs Performance
+- Reserved instances vs on-demand
+- S3 tiers (Standard, IA, Glacier)
+
+## 9. Monitoring & Observability
+
+### Metrics
+- Request rate, error rate, latency (RED)
+- CPU, memory, disk, network
+- Custom business metrics
+
+### Logging
+- Centralized logging (CloudWatch, ELK)
+- Log levels
+- Structured logging
+
+### Alerting
+- Threshold-based alerts
+- Anomaly detection
+- On-call rotation
+
+## 10. Security
+
+- Authentication & Authorization
+- Data encryption (in-transit, at-rest)
+- Rate limiting
+- DDoS protection
+- Input validation
+- SQL injection prevention
+
+## 11. Cost Estimation
+
+### Monthly Cost Breakdown
+- EC2 instances: $X
+- RDS: $Y
+- S3: $Z
+- Data transfer: $A
+- Total: $TOTAL
+
+### Optimization Opportunities
+- Reserved instances (40% savings)
+- Auto-scaling
+- S3 lifecycle policies
+```
+
+---
+
+### Week 11: Coding Interview Prep
+**40 hours total**
+
+```markdown
+□ Data Structures & Algorithms (TypeScript)
+  ├── Arrays & Strings (10 problems)
+  ├── Hash Maps & Sets (10 problems)
+  ├── Linked Lists (5 problems)
+  ├── Stacks & Queues (5 problems)
+  ├── Trees & Graphs (10 problems)
+  ├── Dynamic Programming (5 problems)
+  └── Sorting & Searching (5 problems)
+
+Target: 50 LeetCode Medium problems total
+
+□ Daily Practice Schedule
+  Monday-Friday: 2 problems/day
+  Saturday: 3 problems
+  Sunday: Review previous week's problems
+
+□ Problem-Solving Template
+1. Understand the problem (5 min)
+   - Read carefully
+   - Ask clarifying questions
+   - Identify constraints
+   - Write example inputs/outputs
+
+2. Plan approach (10 min)
+   - Brute force first
+   - Identify patterns
+   - Consider edge cases
+   - Think about time/space complexity
+
+3. Code solution (20 min)
+   - Write clean, readable code
+   - Use TypeScript types
+   - Add comments for complex logic
+
+4. Test (10 min)
+   - Test with examples
+   - Test edge cases
+   - Verify complexity
+
+5. Optimize (5 min)
+   - Can we do better?
+   - Different data structure?
+   - Trade-offs?
+
+□ Common Patterns to Master
+  ├── Two Pointers
+  ├── Sliding Window
+  ├── Binary Search
+  ├── BFS/DFS
+  ├── Backtracking
+  ├── Dynamic Programming
+  └── Greedy Algorithms
+
+□ Example Problems (TypeScript)
+
+// Problem: Two Sum
+function twoSum(nums: number[], target: number): number[] {
+  const map = new Map();
+  
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    
+    if (map.has(complement)) {
+      return [map.get(complement)!, i];
+    }
+    
+    map.set(nums[i], i);
+  }
+  
+  return [];
+}
+
+// Problem: Valid Parentheses
+function isValid(s: string): boolean {
+  const stack: string[] = [];
+  const pairs: Record = {
+    ')': '(',
+    '}': '{',
+    ']': '['
+  };
+  
+  for (const char of s) {
+    if (char in pairs) {
+      if (stack.pop() !== pairs[char]) {
+        return false;
+      }
+    } else {
+      stack.push(char);
+    }
+  }
+  
+  return stack.length === 0;
+}
+
+// Problem: Longest Substring Without Repeating Characters
+function lengthOfLongestSubstring(s: string): number {
+  const seen = new Set();
+  let left = 0;
+  let maxLength = 0;
+  
+  for (let right = 0; right < s.length; right++) {
+    while (seen.has(s[right])) {
+      seen.delete(s[left]);
+      left++;
+    }
+    
+    seen.add(s[right]);
+    maxLength = Math.max(maxLength, right - left + 1);
+  }
+  
+  return maxLength;
+}
+
+// Problem: Binary Tree Level Order Traversal
+interface TreeNode {
+  val: number;
+  left: TreeNode | null;
+  right: TreeNode | null;
+}
+
+function levelOrder(root: TreeNode | null): number[][] {
+  if (!root) return [];
+  
+  const result: number[][] = [];
+  const queue: TreeNode[] = [root];
+  
+  while (queue.length > 0) {
+    const levelSize = queue.length;
+    const currentLevel: number[] = [];
+    
+    for (let i = 0; i < levelSize; i++) {
+      const node = queue.shift()!;
+      currentLevel.push(node.val);
+      
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    
+    result.push(currentLevel);
+  }
+  
+  return result;
+}
+
+□ Mock Interview Practice
+  ├── Pramp: 3 sessions this week
+  ├── Interviewing.io: 2 sessions
+  ├── Record yourself solving problems
+  └── Review and improve
+
+📚 Resources:
+- LeetCode: https://leetcode.com/
+- NeetCode: https://neetcode.io/ (curated problems)
+- AlgoExpert: https://www.algoexpert.io/
+```
+
+---
+
+### Week 12: Behavioral Prep + Mass Applications
+**40 hours total**
+
+```markdown
+□ Behavioral Interview Prep (STAR Method)
+
+Common Questions & Prepared Answers:
+
+1. "Tell me about yourself" (2-minute pitch)
+"I'm a full-stack engineer specializing in cloud-native applications with AWS,
+React, and Node.js. I've built two production systems: a file storage platform
+serving 10k+ users and a real-time task management API deployed on AWS ECS.
+
+I'm passionate about building scalable systems and recently earned my AWS 
+Certified Developer certification. I've reduced infrastructure costs by 60% 
+through serverless architecture and improved API performance by 45% through 
+strategic caching.
+
+I'm seeking opportunities in Europe where I can contribute to building products
+that scale globally while growing my expertise in distributed systems."
+
+2. "Why do you want to work here?"
+[Research each company - mention specific products, tech stack, values]
+
+3. "Tell me about a challenging technical problem you solved"
+SITUATION: File upload API was timing out for files >5MB
+TASK: Needed to handle large files without blocking the API
+ACTION:
+  - Implemented presigned URLs for direct S3 uploads
+  - Added chunked uploads with resumable capability
+  - Created background job queue for post-processing
+  - Added progress tracking with WebSockets
+RESULT:
+  - Eliminated timeouts completely
+  - Reduced server load by 80%
+  - Enabled uploads up to 100MB
+  - Improved user experience with real-time progress
+
+4. "Describe a time you disagreed with a technical decision"
+SITUATION: Team wanted to use MongoDB for relational data
+TASK: Convince team PostgreSQL was better fit
+ACTION:
+  - Created comparison document with pros/cons
+  - Built prototypes with both databases
+  - Demonstrated query complexity and performance
+  - Showed long-term maintenance benefits
+RESULT:
+  - Team agreed to use PostgreSQL
+  - Saved weeks of migration effort later
+  - Better data integrity
+
+5. "Tell me about a time you failed"
+SITUATION: Deployed code that caused production outage
+TASK: Fix quickly and prevent recurrence
+ACTION:
+  - Rolled back deployment immediately
+  - Identified root cause (missing null check)
+  - Added comprehensive tests
+  - Implemented staging environment
+  - Created deployment checklist
+RESULT:
+  - Learned importance of testing edge cases
+  - Set up automated testing in CI/CD
+  - Zero production incidents since
+
+6. "How do you handle tight deadlines?"
+- Prioritize features (MVP first)
+- Communicate early about risks
+- Break down into smaller tasks
+- Use AI tools to accelerate development
+- Example: Built task management API in 1 week using Cursor
+
+7. "How do you stay updated with technology?"
+- Follow tech blogs (Martin Fowler, Netflix, Uber)
+- Take courses and certifications (AWS Certified Developer)
+- Build side projects to try new tech
+- Contribute to open source
+- Active in online communities (r/backend, Dev.to)
+
+□ Prepare Questions to Ask Interviewers
+
+Technical Questions:
+- What's your tech stack and why did you choose it?
+- How do you handle database migrations?
+- What's your deployment process?
+- How do you ensure code quality?
+- What monitoring and observability tools do you use?
+
+Team/Culture Questions:
+- How is the engineering team structured?
+- What does a typical day look like?
+- How do you handle on-call rotations?
+- What's the code review process?
+- How do you support professional development?
+
+Visa/Logistics Questions:
+- What's your experience with visa sponsorship?
+- What's the typical timeline?
+- Do you provide relocation assistance?
+- Will you support me with housing/settling in?
+- What's the onboarding process for remote hires?
+
+□ Mass Application Campaign (50 applications this week)
+
+Monday-Friday: 10 applications/day
+
+Application Checklist:
+├── Research company (15 min)
+│   ├── Read about products
+│   ├── Check tech stack (StackShare, job description)
+│   ├── Find engineering blog
+│   └── Look up employees on LinkedIn
+├── Customize cover letter (20 min)
+│   ├── Mention specific products
+│   ├── Align your experience with their needs
+│   ├── Express genuine interest
+│   └── Clear call to action
+├── Tailor resume (10 min)
+│   ├── Highlight relevant experience
+│   ├── Use keywords from job description
+│   └── Quantify achievements
+├── Apply through multiple channels
+│   ├── Company website
+│   ├── LinkedIn
+│   ├── Referral (if possible)
+│   └── Email to hiring manager (if found)
+└── Track in spreadsheet
+    ├── Company, role, date, status
+    ├── Follow-up reminders (1 week, 2 weeks)
+    └── Notes from research
+
+Target Companies (Examples):
+Germany:
+├── N26, Zalando, Delivery Hero, HelloFresh
+├── SoundCloud, GetYourGuide, Personio
+└── Auto1 Group, Omio, Contentful
+
+Netherlands:
+├── Booking.com, Adyen, Mollie, Bunq
+├── Picnic, MessageBird, Miro
+└── Elastic, GitLab (European offices)
+
+Ireland:
+├── Stripe, Intercom, HubSpot
+├── Workday, Indeed, Zendesk
+└── ClearBank, Fenergo
+
+Sweden:
+├── Spotify, Klarna, King
+├── iZettle, Tink, Epidemic Sound
+└── Truecaller, Schibsted
+
+□ Networking Intensive
+├── LinkedIn: Connect with 30 people this week
+│   ├── Recruiters at target companies
+│   ├── Engineers in EU (ask for advice, not jobs)
+│   ├── Send personalized messages
+│   └── Engage with their posts
+├── Email outreach: 10 emails to hiring managers
+├── Join communities:
+│   ├── EU Tech Slack channels
+│   ├── Discord servers (Backend, Node.js)
+│   └── Reddit (r/cscareerquestionsEU)
+└── Attend virtual events
+    ├── Company tech talks
+    ├── Meetup.com online events
+    └── Hackathons
+
+□ Blog Post #3
+Title: "System Design Deep Dive: Building a Scalable Task Management System"
+
+Cover:
+├── Architecture decisions
+├── Real-time collaboration with WebSockets
+├── Database design and indexing
+├── Caching strategy
+├── Deployment on AWS ECS
+└── Lessons learned
+
+Publish and share widely
+
+📚 Resources:
+- Behavioral questions: https://www.techinterviewhandbook.org/behavioral-interview/
+- Salary negotiation: https://www.levels.fyi/
+```
+
+**🎯 Month 3 Deliverable**: 
+```
+✅ System design mastery (10 designs practiced)
+✅ 50 LeetCode problems solved
+✅ Behavioral answers prepared (STAR method)
+✅ 70+ job applications submitted (Month 2: 20, Month 3: 50)
+✅ 10+ screening calls/interviews scheduled
+✅ Active in 5+ professional communities
+✅ 3 technical blog posts published
+✅ Strong network of EU tech professionals
+```
+
+---
+
+## 🎯 Month 4: Interview Loop + Offer Negotiation
+**Goal**: Convert interviews to offers, negotiate best package
+
+### Week 13-14: Interview Execution
+**80 hours total (interviews + prep)**
+
+```markdown
+□ Interview Preparation Routine
+
+Morning (Before Interview):
+├── Review company's products and tech stack (30 min)
+├── Review your projects (especially relevant ones)
+├── Practice 2-3 LeetCode problems
+├── Prepare questions to ask (5-7 questions)
+└── Test video/audio setup
+
+During Interview:
+├── Join 5 minutes early
+├── Have notebook ready for notes
+├── Keep projects/resume open for reference
+├── Show enthusiasm and ask questions
+└── Take notes on what they ask/mention
+
+After Interview:
+├── Send thank you email within 24 hours
+├── Document questions asked
+├── Note areas to improve
+└── Update interview tracker
+
+□ Typical European Interview Process (4-6 weeks)
+
+Round 1: Recruiter Screen (30 min)
+├── Tell me about yourself
+├── Why this company?
+├── Salary expectations
+├── Visa sponsorship discussion
+├── Timeline and process overview
+└── Your questions
+
+TIPS:
+- Be clear you need visa sponsorship from start
+- Research typical salaries beforehand (Glassdoor, Levels.fyi)
+- Don't give exact number, give range
+- Example: "Based on my research, roles like this in [city] 
+  with visa sponsorship typically range from €X to €Y. I'm 
+  flexible based on the full package and growth opportunities."
+
+Round 2: Technical Screen (45-60 min)
+├── 1-2 coding problems (LeetCode Medium)
+├── Live coding on CoderPad/HackerRank
+├── Follow-up questions on complexity
+└── May include system design discussion
+
+TIPS:
+- Think out loud (communicate your thought process)
+- Ask clarifying questions before coding
+- Start with brute force, then optimize
+- Test your code with examples
+- Discuss trade-offs
+
+Round 3: System Design (60 min)
+├── Design a system (e.g., URL shortener, Twitter feed)
+├── Whiteboard (virtual) session
+├── Discuss requirements, constraints, scaling
+└── Deep dive into specific components
+
+TIPS:
+- Start with requirements gathering (don't jump to solution)
+- Think aloud about trade-offs
+- Draw diagrams (use Excalidraw if virtual)
+- Discuss both functional and non-functional requirements
+- Show you understand production concerns (monitoring, security)
+
+Round 4: Behavioral + Cultural Fit (45 min)
+├── STAR method questions
+├── Past projects and challenges
+├── Team collaboration scenarios
+├── How you handle conflict/feedback
+└── Your questions about team/culture
+
+TIPS:
+- Have 3-5 STAR stories ready
+- Be specific with metrics and outcomes
+- Show growth mindset (what you learned)
+- Ask insightful questions about team dynamics
+
+Round 5: Final Round / Manager Interview (60 min)
+├── Deep dive into experience
+├── Technical philosophy and approach
+├── Long-term goals and interests
+├── Fit with team and company vision
+└── Detailed questions from you
+
+TIPS:
+- Research the manager on LinkedIn
+- Prepare thoughtful questions about vision/roadmap
+- Show genuine interest in company mission
+- This is also your chance to evaluate them
+
+□ Interview Tracking Spreadsheet
+
+| Company | Role | Stage | Date | Status | Next Steps | Notes |
+|---------|------|-------|------|--------|------------|-------|
+| N26 | Backend Eng | Screen | Feb 10 | Passed | Tech screen Feb 17 | Asked about visa timeline |
+| Klarna | Full-Stack | Tech Screen | Feb 12 | Passed | System design Feb 19 | Focus on scalability |
+| Stripe | SWE | Behavioral | Feb 14 | Waiting | TBD | Great culture fit |
+
+□ Common Technical Questions (Be Ready)
+
+TypeScript/Node.js:
+- Explain event loop and async/await
+- Difference between Promise.all and Promise.race
+- How does garbage collection work in Node.js?
+- Explain middleware pattern in Express
+- How do you handle errors in async functions?
+- What's the difference between CommonJS and ES Modules?
+
+AWS:
+- How would you design a fault-tolerant system on AWS?
+- Explain S3 storage classes and when to use each
+- Difference between EC2, ECS, and Lambda?
+- How do you secure an API on AWS?
+- Explain VPC and security groups
+- How would you optimize costs on AWS?
+
+System Design:
+- Design Instagram
+- Design Uber
+- Design Netflix
+- Design WhatsApp
+- Design notification system
+- Design rate limiter
+
+Behavioral:
+- Hardest bug you've debugged?
+- Conflict with team member?
+- Project you're most proud of?
+- Time you had to learn new technology quickly?
+- How do you prioritize tasks?
+
+□ Sample Responses
+
+Q: "How does the Node.js event loop work?"
+A: "Node.js uses a single-threaded event loop to handle asynchronous operations.
+Here's how it works:
+
+1. Call Stack: Executes synchronous code
+2. Callback Queue: Holds callbacks from async operations
+3. Event Loop: Monitors call stack and callback queue
+
+When an async operation completes (like a file read or HTTP request), its 
+callback is added to the callback queue. The event loop checks if the call 
+stack is empty, and if so, moves the first callback from the queue to the 
+call stack for execution.
+
+There are actually multiple queues with different priorities:
+- Microtask queue (Promises) - highest priority
+- Timer queue (setTimeout, setInterval)
+- I/O queue (file system, network)
+- Check queue (setImmediate)
+
+This is why Promises resolve before setTimeout(0).
+
+In production, we need to be careful not to block the event loop with heavy 
+synchronous operations, as it prevents Node from handling other requests. 
+For CPU-intensive work, we can use worker threads or offload to separate services."
+
+Q: "Design a rate limiter"
+A: [Follow system design template from Week 9-10]
+
+□ Handling Difficult Situations
+
+Situation: "We can't offer visa sponsorship after all"
+Response: "I understand visa sponsorship is complex. Can you help me understand 
+what changed? Is there flexibility if I can demonstrate exceptional value? 
+I'm also open to discussing contract-to-hire arrangements where we can work 
+together first, then discuss sponsorship after proving my fit."
+
+Situation: "The salary is lower than expected"
+Response: "I appreciate the offer. Based on my research of similar roles with 
+visa sponsorship in [city], the market rate seems to be €X-Y. Given my AWS 
+certification, production experience with [relevant tech], and the value I 
+can bring immediately, is there flexibility to meet somewhere in that range? 
+I'm also interested in the full package - stock options, professional 
+development budget, and growth opportunities."
+
+Situation: "You don't have enough experience"
+Response: "I understand the concern. Let me share how I've approached gaining 
+experience: [describe your two production projects, metrics, challenges solved]. 
+I'm also AWS certified and have shipped features used by [X] users. While I 
+may have fewer years, I'm confident my hands-on experience with [relevant tech] 
+and ability to ship quickly will let me contribute from day one. Would a trial 
+project help demonstrate my capabilities?"
+
+□ Red Flags to Watch For
+
+During interviews, evaluate the company too:
+❌ Unwilling to discuss visa sponsorship clearly
+❌ No clear technical roadmap or vision
+❌ Poor communication or disorganized process
+❌ Unrealistic expectations (build entire platform in 2 months)
+❌ Team seems overworked or unhappy
+❌ No mention of testing or quality practices
+❌ Can't explain technical decisions
+❌ "We're a family" culture (often means poor boundaries)
+
+✅ Good signs:
+✅ Clear, transparent communication about visa process
+✅ Structured interview process
+✅ Interviewers are engaged and knowledgeable
+✅ They ask for your input and opinions
+✅ Clear growth path and mentorship
+✅ Strong engineering culture (testing, reviews, documentation)
+✅ Work-life balance emphasized
+```
+
+---
+
+### Week 15-16: Offer Evaluation + Negotiation
+**40 hours total**
+
+```markdown
+□ Offer Evaluation Framework
+
+When you receive an offer, evaluate on multiple dimensions:
+
+1. Compensation
+├── Base Salary (€X/year)
+├── Stock Options (if any)
+├── Signing Bonus
+├── Annual Bonus
+├── Relocation Package
+└── Total Compensation
+
+2. Benefits
+├── Health Insurance (quality, coverage)
+├── Pension/Retirement (employer contribution %)
+├── Vacation Days (EU standard: 25-30)
+├── Sick Leave Policy
+├── Parental Leave
+├── Learning Budget
+└── Home Office Allowance
+
+3. Visa & Relocation
+├── Visa Sponsorship (EU Blue Card, skilled migrant, etc.)
+├── Visa Application Support (lawyer fees covered?)
+├── Relocation Package (flights, temporary housing, moving costs)
+├── Timeline to Start
+└── Support for family members (if applicable)
+
+4. Role & Growth
+├── Title and Level
+├── Responsibilities Match
+├── Growth Opportunities
+├── Mentorship Available
+├── Performance Review Process
+└── Promotion Path
+
+5. Team & Culture
+├── Team Size and Structure
+├── Engineering Practices (code review, testing, CI/CD)
+├── Tech Stack Alignment
+├── Work-Life Balance
+├── Remote/Hybrid Flexibility
+└── Office Location and Commute
+
+6. Company
+├── Financial Stability
+├── Product Market Fit
+├── Company Mission Alignment
+├── Reputation in Industry
+└── Career Brand Value
+
+□ Offer Comparison Spreadsheet
+
+| Factor | Company A (N26) | Company B (Klarna) | Company C (Stripe) | Weight |
+|--------|----------------|-------------------|-------------------|---------|
+| Base Salary | €65k | €70k | €75k | 30% |
+| Stock Options | €5k/yr | €10k/yr | €15k/yr | 15% |
+| Relocation | €5k | €10k | €15k | 10% |
+| Growth Potential | 8/10 | 7/10 | 9/10 | 20% |
+| Team/Culture | 9/10 | 7/10 | 8/10 | 15% |
+| Work-Life Balance | 8/10 | 6/10 | 7/10 | 10% |
+| **Total Score** | **8.3** | **7.5** | **8.6** | **100%** |
+
+□ Negotiation Scripts
+
+Scenario 1: First Offer Below Expectations
+
+Email Template:
+"Thank you for the offer! I'm excited about the opportunity to join [Company] 
+and contribute to [specific project/team].
+
+I've done some research on similar roles with visa sponsorship in [city], and 
+the market range appears to be €X-Y for someone with my experience and skills. 
+Given my:
+- AWS Certified Developer certification
+- Production experience with [relevant tech stack]
+- Track record of [specific achievement with metrics]
+
+I was hoping we could discuss a base salary of €Z, which would be in line with 
+market rates and reflect the value I can bring.
+
+I'm also interested in understanding more about:
+- Stock options or equity
+- Professional development budget
+- Relocation support details
+
+I'm very interested in joining the team and am confident we can find a package 
+that works for both of us. Would you be open to a call to discuss?"
+
+Scenario 2: Competing Offers
+
+"I wanted to update you that I've received another offer from [Company B]. 
+However, [Your Company] remains my top choice because of [specific reason: 
+team, product, culture, growth].
+
+The other offer is at €X with [other benefits]. Is there any flexibility in 
+your offer to help me make the decision to join [Your Company]?
+
+I'd love to discuss how we can make this work, as I'm genuinely excited about 
+contributing to [specific project/goal]."
+
+Scenario 3: Non-Salary Items
+
+"I'm grateful for the base salary of €X, which I think is fair. I'd like to 
+discuss a few other items that would help me succeed:
+
+1. Professional Development: Could we include a €2-3k annual learning budget 
+   for courses, conferences, or certifications?
+
+2. Remote Work: Is there flexibility to work remotely 1-2 days per week after 
+   the initial onboarding period?
+
+3. Visa Timeline: Could you help expedite the visa process? I'm eager to start 
+   contributing as soon as possible.
+
+4. Equipment: Would the company provide a laptop with specifications suitable 
+   for development (16GB RAM minimum, M-series chip or equivalent)?
+
+These items would help me hit the ground running and deliver value faster."
+
+□ Common Negotiation Mistakes to Avoid
+
+❌ Accepting first offer immediately (always negotiate)
+❌ Lying about competing offers
+❌ Being aggressive or demanding
+❌ Negotiating only on salary (consider total package)
+❌ Not doing market research first
+❌ Revealing your current salary (focus on market rate)
+❌ Negotiating too many items (pick 2-3 priorities)
+❌ Burning bridges if you decline offer
+
+✅ Best Practices
+
+✅ Do your research (Glassdoor, Levels.fyi, Payscale)
+✅ Be professional and grateful
+✅ Focus on value you bring, not what you "need"
+✅ Get everything in writing
+✅ Be willing to walk away
+✅ Consider total compensation (not just salary)
+✅ Ask for time to decide (24-48 hours)
+✅ Get details on visa sponsorship in writing
+
+□ Decision Making
+
+Questions to Ask Yourself:
+1. Does this role align with my 5-year career goals?
+2. Will I learn and grow in this position?
+3. Can I see myself working with this team?
+4. Is the compensation fair for the market?
+5. Am I excited about the company's mission?
+6. Is the visa sponsorship clear and reliable?
+7. Does the work-life balance fit my needs?
+8. Is this company financially stable?
+9. Will this role enhance my resume?
+10. Do I have any red flags or concerns?
+
+If you can answer "yes" to 7-8 of these, it's likely a good offer.
+
+□ Accepting an Offer
+
+Email Template:
+"I'm thrilled to formally accept the offer to join [Company] as [Title]!
+
+To confirm, I'm accepting:
+- Base Salary: €X per year
+- Stock Options: Y shares vesting over Z years
+- Signing Bonus: €A
+- Start Date: [Date]
+- Relocation Package: €B
+
+I understand that [Company] will initiate the visa sponsorship process for 
+[EU Blue Card / Skilled Migrant Visa] and provide support throughout.
+
+Could you please send the formal offer letter and employment contract for my 
+review? I'm also happy to start any pre-boarding activities while the visa is 
+being processed.
+
+Thank you for this opportunity. I'm excited to contribute to [specific goal] 
+and can't wait to get started!
+
+Best regards,
+[Your Name]"
+
+□ Declining an Offer
+
+Email Template:
+"Thank you so much for the offer to join [Company] as [Title]. I genuinely 
+appreciate the time you and the team invested in the interview process.
+
+After careful consideration, I've decided to pursue another opportunity that 
+aligns more closely with [my career goals / tech stack preferences / etc.].
+
+I was very impressed by [specific positive: the team, the product, the culture] 
+and hope our paths cross again in the future. I'll be following [Company]'s 
+progress with interest.
+
+Thank you again for the opportunity, and I wish you and the team all the best.
+
+Best regards,
+[Your Name]"
+
+□ Final Checklist Before Accepting
+
+Before you sign:
+├── ✅ Offer letter received in writing
+├── ✅ Salary and compensation clearly stated
+├── ✅ Visa sponsorship explicitly confirmed
+├── ✅ Start date agreed upon
+├── ✅ Relocation package details in writing
+├── ✅ Job title and responsibilities clear
+├── ✅ Benefits package outlined
+├── ✅ Reviewed employment contract (consider lawyer review)
+├── ✅ No non-compete clauses that are too restrictive
+├── ✅ Clear reporting structure
+└── ✅ Any verbal promises documented in writing
+```
+
+**🎯 Month 4 Deliverable**: 
+```
+✅ 10+ interviews completed
+✅ 2-3 final round interviews
+✅ 1-3 offers received
+✅ Negotiated best possible package
+✅ Offer accepted with:
+   - Visa sponsorship confirmed in writing
+   - Competitive salary (€55k-€75k+ depending on location/company)
+   - Relocation package
+   - Growth opportunities
+✅ Start date confirmed
+✅ Pre-boarding process initiated
+```
+
+---
+
+## 📊 Success Metrics & Tracking
+
+### Monthly Targets
+
+**Month 1:**
+- [ ] 1 production project deployed
+- [ ] GitHub: 1 stellar project
+- [ ] LinkedIn profile optimized
+- [ ] AWS cert prep started (10+ hours)
+- [ ] 1 blog post published
+
+**Month 2:**
+- [ ] 2 production projects total
+- [ ] AWS Certified Developer certification
+- [ ] Portfolio website live
+- [ ] 20+ job applications
+- [ ] 2 blog posts published
+
+**Month 3:**
+- [ ] 10 system designs practiced
+- [ ] 50 LeetCode problems solved
+- [ ] 70+ total applications
+- [ ] 10+ screening interviews
+- [ ] 3 blog posts published
+
+**Month 4:**
+- [ ] 10+ interviews completed
+- [ ] 2-3 final rounds
+- [ ] 1-3 offers received
+- [ ] Offer accepted
+- [ ] Visa process started
+
+### Weekly Check-in Questions
+
+Every Sunday, ask yourself:
+1. Did I ship something this week? (code, blog post, application)
+2. Did I learn something new?
+3. Did I apply to 10+ jobs? (Months 2-3)
+4. Did I practice coding problems? (3+ days)
+5. Did I network with someone new?
+6. Am I on track with my monthly goals?
+7. What blockers do I need to address?
+
+### Accountability
+
+Choose ONE:
+- [ ] Find an accountability partner (another dev job hunting)
+- [ ] Join a bootcamp/cohort program
+- [ ] Weekly posts on LinkedIn documenting progress
+- [ ] Daily tweets with #100DaysOfCode
+- [ ] Weekly blog posts
+
+### When Things Don't Go As Planned
+
+**If you're not getting interviews:**
+- Review resume with 3 people
+- Improve project demos (add GIFs, videos)
+- Apply to 15 jobs/day instead of 10
+- Personalize applications more
+- Network more actively (50 connections/week)
+- Consider recruiters (HackerRank, TripleByte)
+
+**If you're failing technical interviews:**
+- Double down on LeetCode (5 problems/day)
+- Book more mock interviews
+- Review and learn from each failure
+- Focus on problem-solving communication
+- Record yourself solving problems
+
+**If offers are below expectations:**
+- Negotiate harder (use scripts above)
+- Apply to more companies
+- Improve your story (better STAR examples)
+- Target higher-tier companies
+- Consider contract-to-hire
+
+---
+
+## 💰 Financial Planning
+
+### Costs During Job Search
+
+**Setup Costs (One-time):**
+- AWS Free Tier: $0 (stay within limits)
+- Domain Names: $20/year (2 domains)
+- AWS Certification: $150
+- Udemy Courses: $30
+- **Total: ~$200**
+
+**Monthly Costs (4 months):**
+- AWS (stay in free tier): $10-20/month
+- **Total: $50-80**
+
+**Total Investment: ~$280**
+
+### Relocation Costs (Typically Covered by Employer)
+
+What to negotiate for:
+- Flights: €500-1000
+- Temporary housing: €2000-3000 (1 month)
+- Visa fees: €100-300
+- Moving costs: €1000-2000
+- **Ask for €5k-10k relocation package**
+
+### First Month Expenses in EU
+
+Budget for (until first paycheck):
+- Security deposit: 2-3 months rent
+- Initial rent: 1 month
+- Furniture: €500-
